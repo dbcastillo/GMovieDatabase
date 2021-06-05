@@ -66,7 +66,6 @@ public class MovieControllerTest {
     @Transactional
     @Rollback
     public void testGetMovies() throws Exception {
-      // String json=getJSON("src/test/resources/postMovie.json");
       Movie movie = new Movie();
       movie.setTitle("The Avengers");
       this.repository.save(movie);
@@ -79,6 +78,22 @@ public class MovieControllerTest {
                 .andExpect(jsonPath("$[0].title", is("The Avengers")));
     }
 
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testGetMovieById() throws Exception {
+        Movie movie = new Movie();
+        movie.setTitle("The Avengers");
+        this.repository.save(movie);
+
+        MockHttpServletRequestBuilder request=get("/movies/1")
+                .contentType(MediaType.APPLICATION_JSON);
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].Id", is(1)))
+                .andExpect(jsonPath("$[0].title", is("The Avengers")));
+    }
 
 
     public String getJSON(String path) throws  Exception{

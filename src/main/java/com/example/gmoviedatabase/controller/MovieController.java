@@ -2,10 +2,7 @@ package com.example.gmoviedatabase.controller;
 
 import com.example.gmoviedatabase.model.Movie;
 import com.example.gmoviedatabase.repository.MovieRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class MovieController {
@@ -24,5 +21,10 @@ public class MovieController {
     @PostMapping("/movies")
     public Movie create(@RequestBody Movie movie) {
         return this.repository.save(movie);
+    }
+
+    @GetMapping("/movies/{id}")
+    public Movie getMovie(@PathVariable Long id) {
+        return this.repository.findById(id).orElse(new Movie());
     }
 }
