@@ -130,6 +130,23 @@ public class MovieControllerTest {
     }
 
 
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testGetMoviesAvgRating() throws Exception {
+        testCreateMovie();
+        List<Movie> movieList = (List<Movie>) this.repository.findAll();
+        Movie movie = movieList.get(0);
+        RequestBuilder request = get("/movies/title")
+                .param("title",movie.getTitle());
+
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.movie.title", is(movie.getTitle())));
+    }
+
+
     public String getJSON(String path) throws  Exception{
         Path paths = Paths.get(path);
         return new String(Files.readAllBytes(paths));

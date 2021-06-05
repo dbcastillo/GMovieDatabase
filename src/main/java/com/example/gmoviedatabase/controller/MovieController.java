@@ -5,6 +5,8 @@ import com.example.gmoviedatabase.model.Result;
 import com.example.gmoviedatabase.repository.MovieRepository;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -57,4 +59,31 @@ public class MovieController {
         }
         return movie;
     }
+
+
+//    @GetMapping("/movie/title")
+//    public Movie getMovieAvgRating(@RequestParam String title) {
+//
+//        Movie movieRating = new Movie();
+//        List<Integer> list = new ArrayList<>();
+//        List<Movie> movieList = this.repository.findByMovieList(title);
+//        int result =0;
+//        int avgResult =0;
+//        if (movieList.size() >0) {
+//            for (int i = 0; i < movieList.size(); i++) {
+//                Movie movie = movieList.get(i);
+//                int iRating = Integer.parseInt(movie.getRating());
+//                list.add(iRating);
+//            }
+//
+//            for (int i = 0; i < list.size(); i++) {
+//            result += list.get(i);
+//            }
+//            avgResult = result/ list.size();
+//            movieRating = movieList.get(0);
+//            movieRating.setRating(String.valueOf(avgResult));
+//
+//        }
+//        return movieRating;
+//    }
 }
