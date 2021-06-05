@@ -43,4 +43,18 @@ public class MovieController {
         }
         return result;
     }
+
+    @PatchMapping("/movies/title")
+    public Movie getMovieRating(@RequestBody Movie movieInput,@RequestParam String title){
+
+        Movie movie = this.repository.findByTitle(title);
+        if(movie != null){
+            movie.setRating(movieInput.getRating());
+            this.repository.save(movie);
+        }
+        else {
+            new Movie();
+        }
+        return movie;
+    }
 }

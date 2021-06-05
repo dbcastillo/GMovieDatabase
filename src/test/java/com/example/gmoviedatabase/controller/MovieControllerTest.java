@@ -16,11 +16,9 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyOrNullString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
 
 
 import javax.transaction.Transactional;
@@ -115,6 +113,21 @@ public class MovieControllerTest {
                 .andExpect(jsonPath("$.message", is("This movie Nomovie does not exist")));
     }
 
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testMovieRating() throws Exception {
+        String json=getJSON("src/test/resources/movieRating.json");
+        MockHttpServletRequestBuilder request=patch("/movies/title")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json)
+                .param("title","The Avengers");
+
+        this.mvc.perform(request)
+                .andExpect(status().isOk());
+               // .andExpect(jsonPath("$.[0].rating", is("5")));
+    }
 
 
     public String getJSON(String path) throws  Exception{
