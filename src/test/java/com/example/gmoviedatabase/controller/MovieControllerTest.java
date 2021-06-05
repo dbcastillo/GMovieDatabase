@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
@@ -26,6 +27,7 @@ import javax.transaction.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -84,22 +86,35 @@ public class MovieControllerTest {
 
     }
 
-
     @Test
     @Transactional
     @Rollback
-    public void testGetMovieById() throws Exception {
-        Movie movie = new Movie();
-        movie.setTitle("The Avengers");
-        this.repository.save(movie);
+    public void testGetMovieByTitle() throws Exception {
+        testCreateMovie();
+        List<Movie> movieList = (List<Movie>) this.repository.findAll();
+        Movie movie = movieList.get(0);
+        RequestBuilder request = get("/movies/title")
+                .param("title",movie.getTitle());
 
-        MockHttpServletRequestBuilder request=get("/movies/1")
-                .contentType(MediaType.APPLICATION_JSON);
         this.mvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].Id", is(1)))
-                .andExpect(jsonPath("$[0].title", is("The Avengers")));
+                .andExpect(jsonPath("$.movie.title", is(movie.getTitle())));
     }
+    @Test
+    @Transactional
+    @Rollback
+    public void testGetMovieByTitleNotExist() throws Exception {
+        testCreateMovie();
+        List<Movie> movieList = (List<Movie>) this.repository.findAll();
+        Movie movie = movieList.get(0);
+        RequestBuilder request = get("/movies/title")
+                .param("title","Nomovie");
+
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message", is("This movie Nomovie does not exist")));
+    }
+
 
 
     public String getJSON(String path) throws  Exception{

@@ -15,6 +15,7 @@ public class Movie {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
+    @JsonIgnore
     private Long id;
 
     private String title;
@@ -30,6 +31,11 @@ public class Movie {
     @JsonIgnore
     public Long getId() {
         return id;
+    }
+
+    @JsonProperty
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getTitle() {
