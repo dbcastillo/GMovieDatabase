@@ -70,12 +70,18 @@ public class MovieControllerTest {
       movie.setTitle("The Avengers");
       this.repository.save(movie);
 
+      Movie movie1 = new Movie();
+      movie1.setTitle("Superman Returns");
+      this.repository.save(movie1);
+
         MockHttpServletRequestBuilder request=get("/movies")
                 .contentType(MediaType.APPLICATION_JSON);
                 //.content(json);
         this.mvc.perform(request)
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].title", is("The Avengers")));
+                .andExpect(jsonPath("$[0].title", is("The Avengers")))
+                .andExpect(jsonPath("$[1].title", is("Superman Returns")));
+
     }
 
 
